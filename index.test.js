@@ -67,3 +67,33 @@ test("should delete db entry by id", async () => {
     expect(restaurants.length).toEqual(restQuantity);
     expect(restaurants[0].id).not.toEqual(1)
 ;})
+
+test("should return an error if name is empty", async () => {
+    const response = await request(app).post("/restaurants").send({
+        name: "",
+        location: "Texas",
+        cuisine: "FastFood",
+    });
+    expect(response.statusCode).toBe(400);
+    expect(response.body.errors[0].msg).toBe("Name cannot be empty.");
+});
+
+test("should return an error if location is empty", async () => {
+    const response = await request(app).post("/restaurants").send({
+        name: "Applebees",
+        location: "",
+        cuisine: "FastFood",
+    });
+    expect(response.statusCode).toBe(400);
+    expect(response.body.errors[0].msg).toBe("Location cannot be empty.");
+});
+
+test("should return an error if cuisine is empty", async () => {
+    const response = await request(app).post("/restaurants").send({
+        name: "Applebees",
+        location: "Texas",
+        cuisine: "",
+    });
+    expect(response.statusCode).toBe(400);
+    expect(response.body.errors[0].msg).toBe("Cuisine cannot be empty.");
+});
